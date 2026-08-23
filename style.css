@@ -1,20 +1,23 @@
-/* ===== FUG CGPA Calculator - Dark Purple Theme ===== */
+/* ===== FUG CGPA Calculator - Glowing 3D Purple Theme ===== */
 :root {
-  --bg-primary: #0f0a1a;
-  --bg-secondary: #1a1025;
-  --bg-card: #221636;
-  --bg-card-hover: #2a1c42;
+  --bg-primary: #0a0612;
+  --bg-secondary: #120a1e;
+  --bg-card: #1a0f2e;
+  --bg-card-hover: #221540;
   --purple-dark: #2d1b4e;
-  --purple-medium: #6b3fa0;
+  --purple-medium: #7c3aed;
   --purple-light: #9b6ec7;
   --purple-accent: #b892ff;
+  --pink-glow: #ec4899;
+  --cyan-glow: #06b6d4;
   --text-primary: #f0eaf8;
-  --text-secondary: #b8a5cc;
+  --text-secondary: #c4b5d9;
   --text-muted: #8a759e;
-  --border-purple: #3d2a5c;
-  --glass-bg: rgba(34, 22, 54, 0.85);
-  --glass-border: rgba(155, 110, 199, 0.3);
-  --shadow-purple: rgba(107, 63, 160, 0.25);
+  --border-purple: #4a2d6e;
+  --glass-bg: rgba(26, 15, 46, 0.9);
+  --glass-border: rgba(184, 146, 255, 0.4);
+  --shadow-purple: rgba(124, 58, 237, 0.5);
+  --shadow-glow: rgba(184, 146, 255, 0.6);
   --danger: #ff6b8a;
   --success: #4ecdc4;
 }
@@ -29,19 +32,314 @@ body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--bg-primary);
   background-image: 
-    radial-gradient(circle at 20% 20%, rgba(107, 63, 160, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(155, 110, 199, 0.1) 0%, transparent 50%),
-    linear-gradient(135deg, #0f0a1a 0%, #1a1025 100%);
+    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%),
+    linear-gradient(135deg, #0a0612 0%, #120a1e 100%);
   min-height: 100vh;
   color: var(--text-primary);
   line-height: 1.6;
   padding: 2rem 1rem;
+  overflow-x: hidden;
 }
 
-/* ===== Main Container ===== */
+/* ===== 3D Particle Background ===== */
+#particleContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--purple-accent);
+  border-radius: 50%;
+  animation: floatParticle 3s infinite ease-in-out;
+  box-shadow: 0 0 10px var(--purple-accent), 0 0 20px var(--purple-accent);
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px) scale(1.5);
+    opacity: 0.8;
+  }
+}
+
+/* ===== Hidden Class ===== */
+.hidden {
+  display: none !important;
+}
+
+/* ===== Login Container ===== */
+.login-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* ===== 3D Glass Card ===== */
+.glass-3d {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 0 30px var(--shadow-glow),
+    0 0 60px rgba(124, 58, 237, 0.3),
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: perspective(1000px) rotateX(2deg);
+  transition: all 0.3s ease;
+  animation: glowPulse 3s infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px var(--shadow-glow),
+      0 0 60px rgba(124, 58, 237, 0.3),
+      0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 50px var(--shadow-glow),
+      0 0 80px rgba(124, 58, 237, 0.5),
+      0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.glass-3d:hover {
+  transform: perspective(1000px) rotateX(0deg) translateY(-5px);
+}
+
+/* ===== Login Card ===== */
+.login-card {
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.university-logo {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 2s infinite;
+  filter: drop-shadow(0 0 20px var(--purple-accent));
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.login-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--purple-accent), var(--pink-glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px var(--shadow-glow);
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ===== Login Form ===== */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-field-3d {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-field-3d label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-field-3d input {
+  background: rgba(18, 10, 30, 0.8);
+  color: var(--text-primary);
+  border: 2px solid var(--border-purple);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.input-field-3d input:focus {
+  border-color: var(--purple-accent);
+  box-shadow: 
+    0 0 20px rgba(184, 146, 255, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.input-field-3d input::placeholder {
+  color: var(--text-muted);
+}
+
+.input-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple-accent), var(--pink-glow));
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.input-field-3d input:focus + .input-highlight {
+  width: 100%;
+}
+
+/* ===== Login Options ===== */
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkbox-3d {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.checkbox-3d input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--purple-medium);
+}
+
+.forgot-password {
+  color: var(--purple-accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: var(--pink-glow);
+  text-shadow: 0 0 10px var(--pink-glow);
+}
+
+/* ===== 3D Login Button ===== */
+.login-btn-3d {
+  position: relative;
+  background: linear-gradient(135deg, var(--purple-medium), var(--purple-accent));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 15px rgba(124, 58, 237, 0.4),
+    0 0 30px rgba(184, 146, 255, 0.3);
+}
+
+.login-btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(124, 58, 237, 0.6),
+    0 0 50px rgba(184, 146, 255, 0.5);
+}
+
+.login-btn-3d:active {
+  transform: translateY(0);
+}
+
+.btn-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* ===== Signup Link ===== */
+.signup-link {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.signup-link a {
+  color: var(--purple-accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.signup-link a:hover {
+  color: var(--pink-glow);
+  text-shadow: 0 0 10px var(--pink-glow);
+}
+
+/* ===== Main App ===== */
 .cgpa-app {
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 /* ===== Header ===== */
@@ -51,11 +349,13 @@ body {
   align-items: center;
   padding: 1.5rem 2rem;
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 8px 32px var(--shadow-purple);
+  box-shadow: 
+    0 0 30px var(--shadow-glow),
+    0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .brand {
@@ -65,18 +365,19 @@ body {
 }
 
 .logo-mark {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  background: linear-gradient(135deg, var(--purple-light), var(--purple-accent));
+  background: linear-gradient(135deg, var(--purple-accent), var(--pink-glow));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 15px var(--purple-accent));
 }
 
 .app-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #fff, var(--purple-light));
+  background: linear-gradient(135deg, #fff, var(--purple-accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -87,38 +388,58 @@ body {
   color: var(--text-secondary);
 }
 
-.session-badge {
-  background: linear-gradient(135deg, var(--purple-dark), var(--purple-medium));
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name-display {
+  color: var(--purple-accent);
+  font-weight: 600;
+  text-shadow: 0 0 10px var(--purple-accent);
+}
+
+.logout-btn {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
   padding: 0.5rem 1rem;
-  border-radius: 25px;
+  border-radius: 8px;
+  cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid var(--purple-light);
-  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: var(--danger);
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 107, 138, 0.5);
 }
 
 /* ===== Glass Card ===== */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 16px var(--shadow-purple);
+  box-shadow: 
+    0 0 20px var(--shadow-glow),
+    0 4px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: var(--purple-light);
-  box-shadow: 0 6px 24px rgba(107, 63, 160, 0.35);
+  border-color: var(--purple-accent);
+  box-shadow: 
+    0 0 30px var(--shadow-glow),
+    0 6px 24px rgba(124, 58, 237, 0.4);
 }
 
 /* ===== Control Panel ===== */
-.control-panel {
-  background: var(--glass-bg);
-}
-
 .control-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -143,7 +464,7 @@ body {
 }
 
 .input-group select {
-  background: var(--bg-secondary);
+  background: rgba(18, 10, 30, 0.8);
   color: var(--text-primary);
   border: 1px solid var(--border-purple);
   border-radius: 8px;
@@ -155,16 +476,13 @@ body {
 
 .input-group select:hover,
 .input-group select:focus {
-  border-color: var(--purple-medium);
+  border-color: var(--purple-accent);
   background: var(--bg-card);
+  box-shadow: 0 0 15px rgba(184, 146, 255, 0.3);
   outline: none;
 }
 
 /* ===== Course Entry ===== */
-.course-entry {
-  background: var(--glass-bg);
-}
-
 .section-title-row {
   display: flex;
   justify-content: space-between;
@@ -182,13 +500,14 @@ body {
 
 .section-title-row span {
   color: var(--purple-accent);
+  text-shadow: 0 0 10px var(--purple-accent);
 }
 
 /* ===== Buttons ===== */
 .btn-outline, 
 .btn-ghost {
   background: transparent;
-  color: var(--purple-light);
+  color: var(--purple-accent);
   border: 1px solid var(--purple-medium);
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
@@ -200,8 +519,9 @@ body {
 
 .btn-outline:hover {
   background: var(--purple-dark);
-  border-color: var(--purple-light);
+  border-color: var(--purple-accent);
   color: var(--text-primary);
+  box-shadow: 0 0 20px rgba(184, 146, 255, 0.4);
 }
 
 .btn-ghost {
@@ -214,6 +534,7 @@ body {
 .btn-ghost:hover {
   color: var(--danger);
   border-color: var(--danger);
+  box-shadow: 0 0 20px rgba(255, 107, 138, 0.4);
 }
 
 /* ===== Course List ===== */
@@ -229,7 +550,7 @@ body {
   grid-template-columns: 2fr 1fr 1.2fr auto;
   gap: 0.75rem;
   align-items: center;
-  background: var(--bg-secondary);
+  background: rgba(18, 10, 30, 0.8);
   padding: 0.75rem;
   border-radius: 8px;
   border: 1px solid var(--border-purple);
@@ -249,13 +570,14 @@ body {
 }
 
 .course-row:hover {
-  border-color: var(--purple-medium);
+  border-color: var(--purple-accent);
   background: var(--bg-card-hover);
+  box-shadow: 0 0 20px rgba(184, 146, 255, 0.3);
 }
 
 .course-row input,
 .course-row select {
-  background: var(--bg-primary);
+  background: rgba(10, 6, 18, 0.9);
   color: var(--text-primary);
   border: 1px solid var(--border-purple);
   border-radius: 6px;
@@ -266,7 +588,8 @@ body {
 
 .course-row input:focus,
 .course-row select:focus {
-  border-color: var(--purple-medium);
+  border-color: var(--purple-accent);
+  box-shadow: 0 0 10px rgba(184, 146, 255, 0.3);
   outline: none;
 }
 
@@ -294,6 +617,7 @@ body {
 .remove-course-btn:hover {
   color: var(--danger);
   background: rgba(255, 107, 138, 0.1);
+  box-shadow: 0 0 15px rgba(255, 107, 138, 0.3);
 }
 
 .course-actions {
@@ -315,6 +639,9 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   background: linear-gradient(135deg, var(--bg-card), var(--purple-dark));
+  box-shadow: 
+    0 0 30px var(--shadow-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .result-left {
@@ -337,12 +664,13 @@ body {
 }
 
 .gpa-value {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--purple-accent), #fff);
+  background: linear-gradient(135deg, var(--purple-accent), var(--pink-glow));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 15px var(--purple-accent));
 }
 
 .gpa-scale {
@@ -362,9 +690,10 @@ body {
 }
 
 .preview-value {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: var(--purple-accent);
+  text-shadow: 0 0 15px var(--purple-accent);
 }
 
 .result-stats {
@@ -379,7 +708,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(155, 110, 199, 0.2);
+  border-bottom: 1px solid rgba(184, 146, 255, 0.2);
 }
 
 .stat-item span {
@@ -388,8 +717,9 @@ body {
 }
 
 .stat-item strong {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: var(--purple-accent);
+  text-shadow: 0 0 10px var(--purple-accent);
 }
 
 /* ===== Footer ===== */
@@ -422,6 +752,10 @@ body {
     flex-direction: column;
   }
   
+  .user-info {
+    flex-direction: column;
+  }
+  
   .result-panel {
     grid-template-columns: 1fr;
     text-align: center;
@@ -446,6 +780,10 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
+  
+  .login-card {
+    padding: 1.5rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -461,8 +799,7 @@ body {
     font-size: 2.5rem;
   }
   
-  .session-badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.8rem;
+  .university-logo {
+    font-size: 3rem;
   }
 }
