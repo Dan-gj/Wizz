@@ -3,11 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FUG CGPA CALCULATOR · Federal University Gashua</title>
+  <title>FUG CGPA CALCULATOR · 3D Login Portal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="cgpa-app">
+  <!-- 3D Particle Background -->
+  <div id="particleContainer"></div>
+  
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-card glass-3d">
+      <div class="login-header">
+        <div class="university-logo">🎓</div>
+        <h1>Federal University Gashua</h1>
+        <p class="login-subtitle">CGPA Calculator Portal</p>
+      </div>
+      
+      <div class="login-form">
+        <div class="input-field-3d">
+          <label for="loginEmail">📧 Email Address</label>
+          <input type="email" id="loginEmail" placeholder="student@fug.edu.ng" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <div class="input-field-3d">
+          <label for="loginPassword">🔒 Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <div class="login-options">
+          <label class="checkbox-3d">
+            <input type="checkbox" id="rememberMe">
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+        
+        <button class="login-btn-3d" id="loginBtn">
+          <span>Login to Portal</span>
+          <span class="btn-shine"></span>
+        </button>
+        
+        <div class="signup-link">
+          <span>New student? </span>
+          <a href="#" id="showSignup">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Signup Screen -->
+  <div id="signupScreen" class="login-container hidden">
+    <div class="login-card glass-3d">
+      <div class="login-header">
+        <div class="university-logo">📝</div>
+        <h1>Create Account</h1>
+        <p class="login-subtitle">Join FUG CGPA Portal</p>
+      </div>
+      
+      <div class="login-form">
+        <div class="input-field-3d">
+          <label for="signupName">👤 Full Name</label>
+          <input type="text" id="signupName" placeholder="John Doe" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <div class="input-field-3d">
+          <label for="signupEmail">📧 Email Address</label>
+          <input type="email" id="signupEmail" placeholder="student@fug.edu.ng" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <div class="input-field-3d">
+          <label for="signupMatric">🆔 Matric Number</label>
+          <input type="text" id="signupMatric" placeholder="FUG/CS/20/001" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <div class="input-field-3d">
+          <label for="signupPassword">🔒 Password</label>
+          <input type="password" id="signupPassword" placeholder="Create password" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <div class="input-field-3d">
+          <label for="signupConfirmPassword">🔐 Confirm Password</label>
+          <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
+          <span class="input-highlight"></span>
+        </div>
+        
+        <button class="login-btn-3d" id="signupBtn">
+          <span>Create Account</span>
+          <span class="btn-shine"></span>
+        </button>
+        
+        <div class="signup-link">
+          <span>Already have an account? </span>
+          <a href="#" id="showLogin">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main CGPA Calculator (Hidden initially) -->
+  <main id="mainApp" class="cgpa-app hidden">
     <!-- header with university identity -->
     <header class="app-header">
       <div class="brand">
@@ -17,7 +117,10 @@
           <p class="subtitle">Federal University Gashua · All Departments & Levels</p>
         </div>
       </div>
-      <div class="session-badge">2025/2026</div>
+      <div class="user-info">
+        <span id="userDisplayName" class="user-name-display"></span>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
     </header>
 
     <!-- control panel: level & department -->
