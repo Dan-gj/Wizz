@@ -1,454 +1,361 @@
-// ===== FUG CGPA Calculator - Multi-Page Website =====
+// ===== FUG CGPA Calculator - Complete Fixed JavaScript =====
 
-// ==================== NAVIGATION SYSTEM ====================
-
-const navLinks = document.querySelectorAll('.nav-link');
-const pages = document.querySelectorAll('.page');
-const navToggle = document.getElementById('navToggle');
-const navLinksContainer = document.querySelector('.nav-links');
-
-// Navigation function
-function navigateTo(pageId) {
-  // Remove active class from all pages
-  pages.forEach(page => page.classList.remove('active-page'));
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
   
-  // Add active class to selected page
-  const targetPage = document.getElementById(pageId);
-  if (targetPage) {
-    targetPage.classList.add('active-page');
-  }
-  
-  // Update nav links
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('data-page') === pageId) {
-      link.classList.add('active');
+  // ==================== NAVIGATION SYSTEM ====================
+  const navLinks = document.querySelectorAll('.nav-link');
+  const pages = document.querySelectorAll('.page');
+  const navToggle = document.getElementById('navToggle');
+  const navLinksContainer = document.getElementById('navLinks');
+  const navBrand = document.querySelector('.nav-brand');
+
+  // Navigation function
+  function navigateTo(pageId) {
+    // Hide all pages
+    pages.forEach(page => {
+      page.classList.remove('active-page');
+    });
+    
+    // Show target page
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+      targetPage.classList.add('active-page');
     }
-  });
-  
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  
-  // Close mobile menu if open
-  navLinksContainer.classList.remove('active');
-}
-
-// Add click event to nav links
-navLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const pageId = link.getAttribute('data-page');
-    navigateTo(pageId);
-  });
-});
-
-// Mobile menu toggle
-navToggle.addEventListener('click', () => {
-  navLinksContainer.classList.toggle('active');
-});
-
-// Start Calculator button
-document.getElementById('startCalculatorBtn').addEventListener('click', () => {
-  document.getElementById('calculatorSection').scrollIntoView({ behavior: 'smooth' });
-});
-
-// Send message button
-document.getElementById('sendMessageBtn').addEventListener('click', () => {
-  const name = document.getElementById('contactName').value;
-  const email = document.getElementById('contactEmail').value;
-  const message = document.getElementById('contactMessage').value;
-  
-  if (!name || !email || !message) {
-    alert('Please fill in all fields');
-    return;
-  }
-  
-  alert('Thank you for your message! We will get back to you soon.');
-  
-  // Clear form
-  document.getElementById('contactName').value = '';
-  document.getElementById('contactEmail').value = '';
-  document.getElementById('contactMessage').value = '';
-});
-
-// Create 3D particles
-function createParticles() {
-  const container = document.getElementById('particleContainer');
-  const particleCount = 50;
-  
-  for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = `${Math.random() * 100}%`;
-    particle.style.top = `${Math.random() * 100}%`;
-    particle.style.animationDelay = `${Math.random() * 3}s`;
-    particle.style.animationDuration = `${2 + Math.random() * 3}s`;
-    particle.style.width = `${2 + Math.random() * 4}px`;
-    particle.style.height = particle.style.width;
     
-    const colors = ['#b892ff', '#ec4899', '#06b6d4', '#7c3aed'];
-    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-    particle.style.boxShadow = `0 0 10px ${particle.style.background}, 0 0 20px ${particle.style.background}`;
+    // Update nav links
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('data-page') === pageId) {
+        link.classList.add('active');
+      }
+    });
     
-    container.appendChild(particle);
+    // Close mobile menu
+    navLinksContainer.classList.remove('show');
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-}
 
-// ==================== CGPA CALCULATOR LOGIC ====================
+  // Add click event to nav links
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const pageId = this.getAttribute('data-page');
+      navigateTo(pageId);
+    });
+  });
 
-// Grade points mapping for 5.0 scale
-const gradePoints5 = {
-  'A': 5.0,
-  'B': 4.0,
-  'C': 3.0,
-  'D': 2.0,
-  'E': 1.0,
-  'F': 0.0
-};
+  // Mobile menu toggle
+  navToggle.addEventListener('click', function() {
+    navLinksContainer.classList.toggle('show');
+  });
 
-// Grade points mapping for 4.0 scale
-const gradePoints4 = {
-  'A': 4.0,
-  'B': 3.0,
-  'C': 2.0,
-  'D': 1.0,
-  'E': 0.0,
-  'F': 0.0
-};
+  // Brand click - go to home
+  navBrand.addEventListener('click', function() {
+    navigateTo('home');
+  });
 
-// Department full names mapping
-const deptNames = {
-  'computer-science': 'Computer Science',
-  'medicine': 'Medicine & Surgery',
-  'law': 'Law',
-  'economics': 'Economics',
-  'mass-comm': 'Mass Communication',
-  'biology': 'Biology',
-  'chemistry': 'Chemistry',
-  'physics': 'Physics',
-  'mathematics': 'Mathematics',
-  'accounting': 'Accounting',
-  'business-admin': 'Business Administration',
-  'sociology': 'Sociology',
-  'political-science': 'Political Science',
-  'engineering': 'Engineering (Mechanical)',
-  'agric-econ': 'Agricultural Economics'
-};
-
-// Sample course data by department and level
-const sampleCourses = {
-  'computer-science': {
-    '100': [
-      { title: 'Introduction to Computer Science', units: 3 },
-      { title: 'Programming Fundamentals', units: 3 },
-      { title: 'Mathematics I', units: 3 },
-      { title: 'Physics for Computing', units: 2 },
-      { title: 'English Communication', units: 2 }
-    ],
-    '200': [
-      { title: 'Data Structures', units: 3 },
-      { title: 'Object-Oriented Programming', units: 3 },
-      { title: 'Discrete Mathematics', units: 3 },
-      { title: 'Digital Logic', units: 3 },
-      { title: 'Statistics', units: 2 }
-    ],
-    '300': [
-      { title: 'Database Systems', units: 3 },
-      { title: 'Operating Systems', units: 3 },
-      { title: 'Computer Networks', units: 3 },
-      { title: 'Software Engineering', units: 3 },
-      { title: 'Web Development', units: 2 }
-    ],
-    '400': [
-      { title: 'Artificial Intelligence', units: 3 },
-      { title: 'Machine Learning', units: 3 },
-      { title: 'Final Year Project', units: 4 },
-      { title: 'Information Security', units: 3 },
-      { title: 'Cloud Computing', units: 2 }
-    ]
-  },
-  'medicine': {
-    '100': [
-      { title: 'Anatomy I', units: 4 },
-      { title: 'Physiology I', units: 4 },
-      { title: 'Biochemistry', units: 3 },
-      { title: 'Medical Ethics', units: 2 }
-    ],
-    '200': [
-      { title: 'Anatomy II', units: 4 },
-      { title: 'Physiology II', units: 4 },
-      { title: 'Pathology', units: 3 },
-      { title: 'Pharmacology', units: 3 }
-    ],
-    '300': [
-      { title: 'Clinical Medicine I', units: 5 },
-      { title: 'Surgery I', units: 4 },
-      { title: 'Pediatrics', units: 3 },
-      { title: 'Obstetrics', units: 3 }
-    ],
-    '400': [
-      { title: 'Clinical Medicine II', units: 5 },
-      { title: 'Surgery II', units: 4 },
-      { title: 'Community Medicine', units: 3 },
-      { title: 'Radiology', units: 2 }
-    ],
-    '500': [
-      { title: 'Senior Clerkship', units: 6 },
-      { title: 'Elective Rotation', units: 4 },
-      { title: 'Research Project', units: 4 }
-    ]
-  },
-  'law': {
-    '100': [
-      { title: 'Legal Methods', units: 3 },
-      { title: 'Constitutional Law', units: 4 },
-      { title: 'Contract Law', units: 4 },
-      { title: 'English for Lawyers', units: 2 }
-    ],
-    '200': [
-      { title: 'Criminal Law', units: 4 },
-      { title: 'Tort Law', units: 4 },
-      { title: 'Property Law', units: 4 },
-      { title: 'Legal Research', units: 2 }
-    ],
-    '300': [
-      { title: 'Company Law', units: 4 },
-      { title: 'Evidence', units: 4 },
-      { title: 'Jurisprudence', units: 3 },
-      { title: 'Administrative Law', units: 3 }
-    ],
-    '400': [
-      { title: 'International Law', units: 4 },
-      { title: 'Human Rights', units: 3 },
-      { title: 'Law of Banking', units: 3 },
-      { title: 'Legal Practice', units: 3 }
-    ],
-    '500': [
-      { title: 'Law Clinic', units: 6 },
-      { title: 'Professional Ethics', units: 3 },
-      { title: 'Dissertation', units: 4 }
-    ]
-  },
-  'default': {
-    '100': [
-      { title: 'Introduction to Discipline', units: 3 },
-      { title: 'General Mathematics', units: 3 },
-      { title: 'English Communication', units: 2 },
-      { title: 'General Studies', units: 2 }
-    ],
-    '200': [
-      { title: 'Core Course I', units: 3 },
-      { title: 'Core Course II', units: 3 },
-      { title: 'Elective I', units: 2 },
-      { title: 'Research Methods', units: 2 }
-    ],
-    '300': [
-      { title: 'Advanced Core Course', units: 3 },
-      { title: 'Specialized Course', units: 3 },
-      { title: 'Seminar', units: 2 },
-      { title: 'Practical', units: 2 }
-    ],
-    '400': [
-      { title: 'Final Year Project', units: 4 },
-      { title: 'Advanced Seminar', units: 3 },
-      { title: 'Special Topics', units: 3 },
-      { title: 'Industrial Training', units: 3 }
-    ]
+  // ==================== CREATE PARTICLES ====================
+  function createParticles() {
+    const container = document.getElementById('particleContainer');
+    if (!container) return;
+    
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 3 + 's';
+      particle.style.animationDuration = (2 + Math.random() * 3) + 's';
+      
+      const colors = ['#b892ff', '#ec4899', '#06b6d4', '#7c3aed'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.background = color;
+      particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+      
+      container.appendChild(particle);
+    }
   }
-};
 
-// DOM Elements for Calculator
-const levelSelect = document.getElementById('levelSelect');
-const deptSelect = document.getElementById('deptSelect');
-const semesterSelect = document.getElementById('semesterSelect');
-const gradingModeSelect = document.getElementById('gradingMode');
-const courseListContainer = document.getElementById('courseListContainer');
-const addCourseBtn = document.getElementById('addCourseBtn');
-const resetCoursesBtn = document.getElementById('resetCoursesBtn');
-const courseCountSpan = document.getElementById('courseCount');
-const dynamicLevelLabel = document.getElementById('dynamicLevelLabel');
-const dynamicDeptLabel = document.getElementById('dynamicDeptLabel');
-const gpaValueSpan = document.getElementById('gpaValue');
-const gpaScaleSpan = document.getElementById('gpaScale');
-const cgpaValueSpan = document.getElementById('cgpaValue');
-const totalUnitsSpan = document.getElementById('totalUnits');
-const weightedPointsSpan = document.getElementById('weightedPoints');
-const creditPassedSpan = document.getElementById('creditPassed');
+  // ==================== CGPA CALCULATOR ====================
+  // Grade points
+  const gradePoints5 = { 'A': 5.0, 'B': 4.0, 'C': 3.0, 'D': 2.0, 'E': 1.0, 'F': 0.0 };
+  const gradePoints4 = { 'A': 4.0, 'B': 3.0, 'C': 2.0, 'D': 1.0, 'E': 0.0, 'F': 0.0 };
 
-// State
-let courseCounter = 0;
+  // Department names
+  const deptNames = {
+    'computer-science': 'Computer Science',
+    'medicine': 'Medicine & Surgery',
+    'law': 'Law',
+    'economics': 'Economics',
+    'mass-comm': 'Mass Communication',
+    'biology': 'Biology',
+    'chemistry': 'Chemistry',
+    'physics': 'Physics',
+    'mathematics': 'Mathematics',
+    'accounting': 'Accounting',
+    'business-admin': 'Business Administration',
+    'sociology': 'Sociology',
+    'political-science': 'Political Science',
+    'engineering': 'Engineering',
+    'agric-econ': 'Agricultural Economics'
+  };
 
-// Initialize the calculator
-function initCalculator() {
-  updateLabels();
-  loadSampleCourses();
-  addCourseRow();
-  addCourseRow();
-  addCourseRow();
-  updateCourseCount();
-  calculateGPA();
-}
+  // Sample courses
+  const sampleCourses = {
+    'computer-science': {
+      '100': [
+        { title: 'Intro to Computer Science', units: 3 },
+        { title: 'Programming Fundamentals', units: 3 },
+        { title: 'Mathematics I', units: 3 },
+        { title: 'English Communication', units: 2 }
+      ],
+      '200': [
+        { title: 'Data Structures', units: 3 },
+        { title: 'OOP', units: 3 },
+        { title: 'Discrete Math', units: 3 }
+      ],
+      '300': [
+        { title: 'Database Systems', units: 3 },
+        { title: 'Operating Systems', units: 3 }
+      ],
+      '400': [
+        { title: 'AI', units: 3 },
+        { title: 'Final Year Project', units: 4 }
+      ]
+    },
+    'default': {
+      '100': [
+        { title: 'Introduction Course', units: 3 },
+        { title: 'General Studies', units: 2 },
+        { title: 'English', units: 2 }
+      ],
+      '200': [
+        { title: 'Core Course I', units: 3 },
+        { title: 'Core Course II', units: 3 }
+      ],
+      '300': [
+        { title: 'Advanced Course', units: 3 },
+        { title: 'Seminar', units: 2 }
+      ],
+      '400': [
+        { title: 'Project', units: 4 },
+        { title: 'Special Topics', units: 3 }
+      ]
+    }
+  };
 
-// Update dynamic labels
-function updateLabels() {
-  const level = levelSelect.value;
-  const dept = deptSelect.value;
-  dynamicLevelLabel.textContent = `${level} Level`;
-  dynamicDeptLabel.textContent = deptNames[dept] || dept;
-}
+  // DOM Elements
+  const levelSelect = document.getElementById('levelSelect');
+  const deptSelect = document.getElementById('deptSelect');
+  const semesterSelect = document.getElementById('semesterSelect');
+  const gradingModeSelect = document.getElementById('gradingMode');
+  const courseListContainer = document.getElementById('courseListContainer');
+  const addCourseBtn = document.getElementById('addCourseBtn');
+  const resetCoursesBtn = document.getElementById('resetCoursesBtn');
+  const courseCountSpan = document.getElementById('courseCount');
+  const dynamicLevelLabel = document.getElementById('dynamicLevelLabel');
+  const dynamicDeptLabel = document.getElementById('dynamicDeptLabel');
+  const gpaValueSpan = document.getElementById('gpaValue');
+  const gpaScaleSpan = document.getElementById('gpaScale');
+  const cgpaValueSpan = document.getElementById('cgpaValue');
+  const totalUnitsSpan = document.getElementById('totalUnits');
+  const weightedPointsSpan = document.getElementById('weightedPoints');
+  const creditPassedSpan = document.getElementById('creditPassed');
 
-// Load sample courses based on department and level
-function loadSampleCourses() {
-  const dept = deptSelect.value;
-  const level = levelSelect.value;
-  
-  courseListContainer.innerHTML = '';
-  courseCounter = 0;
-  
-  const deptCourses = sampleCourses[dept] || sampleCourses['default'];
-  const courses = deptCourses[level] || deptCourses['100'] || [];
-  
-  courses.forEach(course => {
-    addCourseRow(course.title, course.units, 'A');
-  });
-}
+  let courseCounter = 0;
 
-// Add a new course row
-function addCourseRow(title = '', units = '3', grade = 'A') {
-  courseCounter++;
-  const rowId = `course-${courseCounter}`;
-  
-  const rowDiv = document.createElement('div');
-  rowDiv.className = 'course-row';
-  rowDiv.id = rowId;
-  
-  rowDiv.innerHTML = `
-    <input type="text" class="course-title" placeholder="Course Title (e.g., MTH 101)" value="${title}">
-    <input type="number" class="course-units" placeholder="Units" min="0" max="10" value="${units}">
-    <select class="course-grade">
-      <option value="A" ${grade === 'A' ? 'selected' : ''}>A (Excellent)</option>
-      <option value="B" ${grade === 'B' ? 'selected' : ''}>B (Very Good)</option>
-      <option value="C" ${grade === 'C' ? 'selected' : ''}>C (Good)</option>
-      <option value="D" ${grade === 'D' ? 'selected' : ''}>D (Fair)</option>
-      <option value="E" ${grade === 'E' ? 'selected' : ''}>E (Pass)</option>
-      <option value="F" ${grade === 'F' ? 'selected' : ''}>F (Fail)</option>
-    </select>
-    <button class="remove-course-btn" onclick="removeCourse('${rowId}')" title="Remove course">×</button>
-  `;
-  
-  courseListContainer.appendChild(rowDiv);
-  
-  const inputs = rowDiv.querySelectorAll('input, select');
-  inputs.forEach(input => {
-    input.addEventListener('input', calculateGPA);
-    input.addEventListener('change', calculateGPA);
-  });
-  
-  updateCourseCount();
-  calculateGPA();
-}
+  // Update labels
+  function updateLabels() {
+    const level = levelSelect.value;
+    const dept = deptSelect.value;
+    dynamicLevelLabel.textContent = level + ' Level';
+    dynamicDeptLabel.textContent = deptNames[dept] || dept;
+  }
 
-// Remove a course row
-function removeCourse(rowId) {
-  const row = document.getElementById(rowId);
-  if (row) {
-    row.remove();
+  // Load sample courses
+  function loadSampleCourses() {
+    const dept = deptSelect.value;
+    const level = levelSelect.value;
+    
+    courseListContainer.innerHTML = '';
+    courseCounter = 0;
+    
+    const deptCourses = sampleCourses[dept] || sampleCourses['default'];
+    const courses = deptCourses[level] || deptCourses['100'] || [];
+    
+    courses.forEach(function(course) {
+      addCourseRow(course.title, course.units, 'A');
+    });
+  }
+
+  // Add course row
+  function addCourseRow(title, units, grade) {
+    title = title || '';
+    units = units || '3';
+    grade = grade || 'A';
+    
+    courseCounter++;
+    const rowId = 'course-' + courseCounter;
+    
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'course-row';
+    rowDiv.id = rowId;
+    
+    rowDiv.innerHTML = `
+      <input type="text" class="course-title" placeholder="Course Title" value="${title}">
+      <input type="number" class="course-units" placeholder="Units" min="0" max="10" value="${units}">
+      <select class="course-grade">
+        <option value="A" ${grade === 'A' ? 'selected' : ''}>A</option>
+        <option value="B" ${grade === 'B' ? 'selected' : ''}>B</option>
+        <option value="C" ${grade === 'C' ? 'selected' : ''}>C</option>
+        <option value="D" ${grade === 'D' ? 'selected' : ''}>D</option>
+        <option value="E" ${grade === 'E' ? 'selected' : ''}>E</option>
+        <option value="F" ${grade === 'F' ? 'selected' : ''}>F</option>
+      </select>
+      <button class="remove-course-btn" data-row-id="${rowId}">×</button>
+    `;
+    
+    courseListContainer.appendChild(rowDiv);
+    
+    // Add event listeners
+    const inputs = rowDiv.querySelectorAll('input, select');
+    inputs.forEach(function(input) {
+      input.addEventListener('input', calculateGPA);
+      input.addEventListener('change', calculateGPA);
+    });
+    
+    const removeBtn = rowDiv.querySelector('.remove-course-btn');
+    removeBtn.addEventListener('click', function() {
+      removeCourse(rowId);
+    });
+    
     updateCourseCount();
     calculateGPA();
   }
-}
 
-// Reset all courses
-function resetCourses() {
-  if (confirm('Are you sure you want to reset all courses?')) {
+  // Remove course
+  function removeCourse(rowId) {
+    const row = document.getElementById(rowId);
+    if (row) {
+      row.remove();
+      updateCourseCount();
+      calculateGPA();
+    }
+  }
+
+  // Update course count
+  function updateCourseCount() {
+    const courseRows = document.querySelectorAll('.course-row');
+    courseCountSpan.textContent = courseRows.length + ' courses added';
+  }
+
+  // Calculate GPA
+  function calculateGPA() {
+    const courseRows = document.querySelectorAll('.course-row');
+    const gradingMode = gradingModeSelect.value;
+    const gradePoints = gradingMode === '5point' ? gradePoints5 : gradePoints4;
+    
+    let totalUnits = 0;
+    let weightedPoints = 0;
+    let creditPassed = 0;
+    
+    courseRows.forEach(function(row) {
+      const unitsInput = row.querySelector('.course-units');
+      const gradeSelect = row.querySelector('.course-grade');
+      
+      const units = parseFloat(unitsInput.value) || 0;
+      const grade = gradeSelect.value;
+      const gradePoint = gradePoints[grade] || 0;
+      
+      if (units > 0) {
+        totalUnits += units;
+        weightedPoints += units * gradePoint;
+        
+        if (grade !== 'F') {
+          creditPassed += units;
+        }
+      }
+    });
+    
+    const gpa = totalUnits > 0 ? (weightedPoints / totalUnits) : 0;
+    
+    gpaValueSpan.textContent = gpa.toFixed(2);
+    gpaScaleSpan.textContent = '/ ' + (gradingMode === '5point' ? '5.0' : '4.0');
+    cgpaValueSpan.textContent = gpa.toFixed(2);
+    totalUnitsSpan.textContent = totalUnits;
+    weightedPointsSpan.textContent = weightedPoints.toFixed(1);
+    creditPassedSpan.textContent = creditPassed;
+  }
+
+  // Event Listeners for Calculator
+  levelSelect.addEventListener('change', function() {
+    updateLabels();
     loadSampleCourses();
     calculateGPA();
-  }
-}
+  });
 
-// Update course count
-function updateCourseCount() {
-  const courseRows = document.querySelectorAll('.course-row');
-  courseCountSpan.textContent = `${courseRows.length} courses added`;
-}
+  deptSelect.addEventListener('change', function() {
+    updateLabels();
+    loadSampleCourses();
+    calculateGPA();
+  });
 
-// Calculate GPA
-function calculateGPA() {
-  const courseRows = document.querySelectorAll('.course-row');
-  const gradingMode = gradingModeSelect.value;
-  const gradePoints = gradingMode === '5point' ? gradePoints5 : gradePoints4;
-  
-  let totalUnits = 0;
-  let weightedPoints = 0;
-  let creditPassed = 0;
-  
-  courseRows.forEach(row => {
-    const unitsInput = row.querySelector('.course-units');
-    const gradeSelect = row.querySelector('.course-grade');
-    
-    const units = parseFloat(unitsInput.value) || 0;
-    const grade = gradeSelect.value;
-    const gradePoint = gradePoints[grade] || 0;
-    
-    if (units > 0) {
-      totalUnits += units;
-      weightedPoints += units * gradePoint;
-      
-      if (grade !== 'F') {
-        creditPassed += units;
-      }
+  semesterSelect.addEventListener('change', function() {
+    calculateGPA();
+  });
+
+  gradingModeSelect.addEventListener('change', function() {
+    calculateGPA();
+  });
+
+  addCourseBtn.addEventListener('click', function() {
+    addCourseRow();
+  });
+
+  resetCoursesBtn.addEventListener('click', function() {
+    if (confirm('Reset all courses?')) {
+      loadSampleCourses();
+      calculateGPA();
     }
   });
-  
-  const gpa = totalUnits > 0 ? (weightedPoints / totalUnits) : 0;
-  const cgpa = gpa;
-  
-  gpaValueSpan.textContent = gpa.toFixed(2);
-  gpaScaleSpan.textContent = `/ ${gradingMode === '5point' ? '5.0' : '4.0'}`;
-  cgpaValueSpan.textContent = cgpa.toFixed(2);
-  totalUnitsSpan.textContent = totalUnits;
-  weightedPointsSpan.textContent = weightedPoints.toFixed(1);
-  creditPassedSpan.textContent = creditPassed;
-}
 
-// ==================== EVENT LISTENERS ====================
+  // Start Calculator button
+  const startBtn = document.getElementById('startCalculatorBtn');
+  if (startBtn) {
+    startBtn.addEventListener('click', function() {
+      document.querySelector('.calculator-section').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 
-// Calculator Events
-levelSelect.addEventListener('change', () => {
-  updateLabels();
-  loadSampleCourses();
-  calculateGPA();
-});
+  // Contact form
+  const sendMessageBtn = document.getElementById('sendMessageBtn');
+  if (sendMessageBtn) {
+    sendMessageBtn.addEventListener('click', function() {
+      const name = document.getElementById('contactName').value;
+      const email = document.getElementById('contactEmail').value;
+      const message = document.getElementById('contactMessage').value;
+      
+      if (!name || !email || !message) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      alert('Thank you ' + name + '! Your message has been sent.');
+      
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactEmail').value = '';
+      document.getElementById('contactMessage').value = '';
+    });
+  }
 
-deptSelect.addEventListener('change', () => {
-  updateLabels();
-  loadSampleCourses();
-  calculateGPA();
-});
-
-semesterSelect.addEventListener('change', () => {
-  calculateGPA();
-});
-
-gradingModeSelect.addEventListener('change', () => {
-  calculateGPA();
-});
-
-addCourseBtn.addEventListener('click', () => {
-  addCourseRow();
-});
-
-resetCoursesBtn.addEventListener('click', resetCourses);
-
-// ==================== INITIALIZATION ====================
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Create 3D particles
+  // ==================== INITIALIZATION ====================
   createParticles();
-  
-  // Initialize calculator
-  initCalculator();
-  
-  // Navigate to home page by default
   navigateTo('home');
-});
+  updateLabels();
+  loadSampleCourses();
+  calculateGPA();
+
+}); // End DOMContentLoaded
