@@ -1,242 +1,75 @@
-// ===== FUG CGPA Calculator - 3D Login + Local Storage =====
+// ===== FUG CGPA Calculator - Multi-Page Website =====
 
-// ==================== LOGIN SYSTEM ====================
+// ==================== NAVIGATION SYSTEM ====================
 
-// DOM Elements for Login/Signup
-const loginScreen = document.getElementById('loginScreen');
-const signupScreen = document.getElementById('signupScreen');
-const mainApp = document.getElementById('mainApp');
-const showSignupLink = document.getElementById('showSignup');
-const showLoginLink = document.getElementById('showLogin');
-const loginBtn = document.getElementById('loginBtn');
-const signupBtn = document.getElementById('signupBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const userDisplayName = document.getElementById('userDisplayName');
+const navLinks = document.querySelectorAll('.nav-link');
+const pages = document.querySelectorAll('.page');
+const navToggle = document.getElementById('navToggle');
+const navLinksContainer = document.querySelector('.nav-links');
 
-// Login Inputs
-const loginEmail = document.getElementById('loginEmail');
-const loginPassword = document.getElementById('loginPassword');
-const rememberMe = document.getElementById('rememberMe');
-
-// Signup Inputs
-const signupName = document.getElementById('signupName');
-const signupEmail = document.getElementById('signupEmail');
-const signupMatric = document.getElementById('signupMatric');
-const signupPassword = document.getElementById('signupPassword');
-const signupConfirmPassword = document.getElementById('signupConfirmPassword');
-
-// Local Storage Keys
-const STORAGE_KEYS = {
-  USERS: 'fug_users',
-  CURRENT_USER: 'fug_current_user',
-  REMEMBER_ME: 'fug_remember_me'
-};
-
-// Initialize users in localStorage if not exists
-function initUsers() {
-  if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
-    // Create a default admin user
-    const defaultUsers = [
-      {
-        id: 1,
-        name: 'Admin User',
-        email: 'admin@fug.edu.ng',
-        matric: 'FUG/ADMIN/001',
-        password: 'admin123',
-        createdAt: new Date().toISOString()
-      }
-    ];
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(defaultUsers));
-  }
-}
-
-// Get all users from localStorage
-function getUsers() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || [];
-}
-
-// Save users to localStorage
-function saveUsers(users) {
-  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-}
-
-// Get current user from localStorage
-function getCurrentUser() {
-  const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-  return userJson ? JSON.parse(userJson) : null;
-}
-
-// Save current user to localStorage
-function saveCurrentUser(user) {
-  localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
-}
-
-// Clear current user from localStorage
-function clearCurrentUser() {
-  localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-}
-
-// Show login screen
-function showLoginScreen() {
-  loginScreen.classList.remove('hidden');
-  signupScreen.classList.add('hidden');
-  mainApp.classList.add('hidden');
-}
-
-// Show signup screen
-function showSignupScreen() {
-  loginScreen.classList.add('hidden');
-  signupScreen.classList.remove('hidden');
-  mainApp.classList.add('hidden');
-}
-
-// Show main app
-function showMainApp() {
-  loginScreen.classList.add('hidden');
-  signupScreen.classList.add('hidden');
-  mainApp.classList.remove('hidden');
-}
-
-// Handle login
-function handleLogin() {
-  const email = loginEmail.value.trim();
-  const password = loginPassword.value;
+// Navigation function
+function navigateTo(pageId) {
+  // Remove active class from all pages
+  pages.forEach(page => page.classList.remove('active-page'));
   
-  // Validation
-  if (!email || !password) {
+  // Add active class to selected page
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add('active-page');
+  }
+  
+  // Update nav links
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('data-page') === pageId) {
+      link.classList.add('active');
+    }
+  });
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Close mobile menu if open
+  navLinksContainer.classList.remove('active');
+}
+
+// Add click event to nav links
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const pageId = link.getAttribute('data-page');
+    navigateTo(pageId);
+  });
+});
+
+// Mobile menu toggle
+navToggle.addEventListener('click', () => {
+  navLinksContainer.classList.toggle('active');
+});
+
+// Start Calculator button
+document.getElementById('startCalculatorBtn').addEventListener('click', () => {
+  document.getElementById('calculatorSection').scrollIntoView({ behavior: 'smooth' });
+});
+
+// Send message button
+document.getElementById('sendMessageBtn').addEventListener('click', () => {
+  const name = document.getElementById('contactName').value;
+  const email = document.getElementById('contactEmail').value;
+  const message = document.getElementById('contactMessage').value;
+  
+  if (!name || !email || !message) {
     alert('Please fill in all fields');
     return;
   }
   
-  const users = getUsers();
-  const user = users.find(u => u.email === email && u.password === password);
+  alert('Thank you for your message! We will get back to you soon.');
   
-  if (user) {
-    // Store current user
-    saveCurrentUser(user);
-    
-    // Handle remember me
-    if (rememberMe.checked) {
-      localStorage.setItem(STORAGE_KEYS.REMEMBER_ME, JSON.stringify({ email, password }));
-    } else {
-      localStorage.removeItem(STORAGE_KEYS.REMEMBER_ME);
-    }
-    
-    // Update UI
-    userDisplayName.textContent = `Welcome, ${user.name}`;
-    showMainApp();
-    initCalculator();
-    
-    // Clear login form
-    loginPassword.value = '';
-  } else {
-    alert('Invalid email or password. Please try again or create an account.');
-  }
-}
-
-// Handle signup
-function handleSignup() {
-  const name = signupName.value.trim();
-  const email = signupEmail.value.trim();
-  const matric = signupMatric.value.trim();
-  const password = signupPassword.value;
-  const confirmPassword = signupConfirmPassword.value;
-  
-  // Validation
-  if (!name || !email || !matric || !password || !confirmPassword) {
-    alert('Please fill in all fields');
-    return;
-  }
-  
-  if (password !== confirmPassword) {
-    alert('Passwords do not match');
-    return;
-  }
-  
-  if (password.length < 6) {
-    alert('Password must be at least 6 characters');
-    return;
-  }
-  
-  const users = getUsers();
-  
-  // Check if email already exists
-  if (users.find(u => u.email === email)) {
-    alert('Email already registered. Please login.');
-    return;
-  }
-  
-  // Check if matric number already exists
-  if (users.find(u => u.matric === matric)) {
-    alert('Matric number already registered. Please login.');
-    return;
-  }
-  
-  // Create new user
-  const newUser = {
-    id: Date.now(),
-    name,
-    email,
-    matric,
-    password,
-    createdAt: new Date().toISOString()
-  };
-  
-  users.push(newUser);
-  saveUsers(users);
-  
-  // Auto login
-  saveCurrentUser(newUser);
-  userDisplayName.textContent = `Welcome, ${newUser.name}`;
-  
-  // Clear signup form
-  signupName.value = '';
-  signupEmail.value = '';
-  signupMatric.value = '';
-  signupPassword.value = '';
-  signupConfirmPassword.value = '';
-  
-  showMainApp();
-  initCalculator();
-  
-  alert('Account created successfully!');
-}
-
-// Handle logout
-function handleLogout() {
-  if (confirm('Are you sure you want to logout?')) {
-    clearCurrentUser();
-    if (!localStorage.getItem(STORAGE_KEYS.REMEMBER_ME)) {
-      loginEmail.value = '';
-      loginPassword.value = '';
-    }
-    showLoginScreen();
-  }
-}
-
-// Check if user is already logged in
-function checkLoggedInUser() {
-  const currentUser = getCurrentUser();
-  const rememberedUser = localStorage.getItem(STORAGE_KEYS.REMEMBER_ME);
-  
-  if (currentUser) {
-    userDisplayName.textContent = `Welcome, ${currentUser.name}`;
-    showMainApp();
-    initCalculator();
-  } else if (rememberedUser) {
-    const { email, password } = JSON.parse(rememberedUser);
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-      saveCurrentUser(user);
-      userDisplayName.textContent = `Welcome, ${user.name}`;
-      showMainApp();
-      initCalculator();
-    }
-  } else {
-    showLoginScreen();
-  }
-}
+  // Clear form
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactEmail').value = '';
+  document.getElementById('contactMessage').value = '';
+});
 
 // Create 3D particles
 function createParticles() {
@@ -253,7 +86,6 @@ function createParticles() {
     particle.style.width = `${2 + Math.random() * 4}px`;
     particle.style.height = particle.style.width;
     
-    // Random colors
     const colors = ['#b892ff', '#ec4899', '#06b6d4', '#7c3aed'];
     particle.style.background = colors[Math.floor(Math.random() * colors.length)];
     particle.style.boxShadow = `0 0 10px ${particle.style.background}, 0 0 20px ${particle.style.background}`;
@@ -581,28 +413,6 @@ function calculateGPA() {
 
 // ==================== EVENT LISTENERS ====================
 
-// Login/Signup Events
-loginBtn.addEventListener('click', handleLogin);
-signupBtn.addEventListener('click', handleSignup);
-logoutBtn.addEventListener('click', handleLogout);
-
-showSignupLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  showSignupScreen();
-});
-
-showLoginLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  showLoginScreen();
-});
-
-// Enter key for login
-loginPassword.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    handleLogin();
-  }
-});
-
 // Calculator Events
 levelSelect.addEventListener('change', () => {
   updateLabels();
@@ -633,12 +443,12 @@ resetCoursesBtn.addEventListener('click', resetCourses);
 // ==================== INITIALIZATION ====================
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize users in localStorage
-  initUsers();
-  
   // Create 3D particles
   createParticles();
   
-  // Check if user is already logged in
-  checkLoggedInUser();
+  // Initialize calculator
+  initCalculator();
+  
+  // Navigate to home page by default
+  navigateTo('home');
 });
