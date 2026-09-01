@@ -3,227 +3,343 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FUG CGPA CALCULATOR · 3D Login Portal</title>
+  <title>FUG CGPA CALCULATOR · Federal University Gashua</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- 3D Particle Background -->
   <div id="particleContainer"></div>
   
-  <!-- Login Screen -->
-  <div id="loginScreen" class="login-container">
-    <div class="login-card glass-3d">
-      <div class="login-header">
-        <div class="university-logo">🎓</div>
-        <h1>Federal University Gashua</h1>
-        <p class="login-subtitle">CGPA Calculator Portal</p>
-      </div>
-      
-      <div class="login-form">
-        <div class="input-field-3d">
-          <label for="loginEmail">📧 Email Address</label>
-          <input type="email" id="loginEmail" placeholder="student@fug.edu.ng" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <div class="input-field-3d">
-          <label for="loginPassword">🔒 Password</label>
-          <input type="password" id="loginPassword" placeholder="Enter password" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <div class="login-options">
-          <label class="checkbox-3d">
-            <input type="checkbox" id="rememberMe">
-            <span>Remember me</span>
-          </label>
-          <a href="#" class="forgot-password">Forgot Password?</a>
-        </div>
-        
-        <button class="login-btn-3d" id="loginBtn">
-          <span>Login to Portal</span>
+  <!-- Navigation Bar -->
+  <nav class="navbar glass-3d">
+    <div class="nav-brand">
+      <span class="logo-mark">🎓 FUG</span>
+      <span class="brand-text">CGPA Calculator</span>
+    </div>
+    <div class="nav-links">
+      <a href="#home" class="nav-link active" data-page="home">Home</a>
+      <a href="#about" class="nav-link" data-page="about">About</a>
+      <a href="#gallery" class="nav-link" data-page="gallery">Gallery</a>
+      <a href="#services" class="nav-link" data-page="services">Services</a>
+      <a href="#contact" class="nav-link" data-page="contact">Contact</a>
+    </div>
+    <div class="nav-toggle" id="navToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Home Page -->
+  <main id="home" class="page active-page">
+    <div class="hero-section glass-card">
+      <div class="hero-content">
+        <h1 class="hero-title">Calculate Your CGPA<br>With Ease</h1>
+        <p class="hero-subtitle">Federal University Gashua's Official CGPA Calculator for all departments and levels</p>
+        <button class="cta-btn" id="startCalculatorBtn">
+          <span>Start Calculating</span>
           <span class="btn-shine"></span>
         </button>
-        
-        <div class="signup-link">
-          <span>New student? </span>
-          <a href="#" id="showSignup">Create Account</a>
-        </div>
       </div>
     </div>
-  </div>
-  
-  <!-- Signup Screen -->
-  <div id="signupScreen" class="login-container hidden">
-    <div class="login-card glass-3d">
-      <div class="login-header">
-        <div class="university-logo">📝</div>
-        <h1>Create Account</h1>
-        <p class="login-subtitle">Join FUG CGPA Portal</p>
-      </div>
-      
-      <div class="login-form">
-        <div class="input-field-3d">
-          <label for="signupName">👤 Full Name</label>
-          <input type="text" id="signupName" placeholder="John Doe" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <div class="input-field-3d">
-          <label for="signupEmail">📧 Email Address</label>
-          <input type="email" id="signupEmail" placeholder="student@fug.edu.ng" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <div class="input-field-3d">
-          <label for="signupMatric">🆔 Matric Number</label>
-          <input type="text" id="signupMatric" placeholder="FUG/CS/20/001" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <div class="input-field-3d">
-          <label for="signupPassword">🔒 Password</label>
-          <input type="password" id="signupPassword" placeholder="Create password" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <div class="input-field-3d">
-          <label for="signupConfirmPassword">🔐 Confirm Password</label>
-          <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
-          <span class="input-highlight"></span>
-        </div>
-        
-        <button class="login-btn-3d" id="signupBtn">
-          <span>Create Account</span>
-          <span class="btn-shine"></span>
-        </button>
-        
-        <div class="signup-link">
-          <span>Already have an account? </span>
-          <a href="#" id="showLogin">Login</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Main CGPA Calculator (Hidden initially) -->
-  <main id="mainApp" class="cgpa-app hidden">
-    <!-- header with university identity -->
-    <header class="app-header">
-      <div class="brand">
-        <span class="logo-mark">🎓 FUG</span>
-        <div>
-          <h1>CGPA Calculator</h1>
-          <p class="subtitle">Federal University Gashua · All Departments & Levels</p>
-        </div>
-      </div>
-      <div class="user-info">
-        <span id="userDisplayName" class="user-name-display"></span>
-        <button class="logout-btn" id="logoutBtn">Logout</button>
-      </div>
-    </header>
 
-    <!-- control panel: level & department -->
-    <section class="control-panel glass-card">
-      <div class="control-row">
-        <div class="input-group">
-          <label for="levelSelect">🎯 Current Level</label>
-          <select id="levelSelect">
-            <option value="100">100 Level</option>
-            <option value="200">200 Level</option>
-            <option value="300">300 Level</option>
-            <option value="400">400 Level</option>
-            <option value="500">500 Level (Medicine/Law)</option>
-          </select>
+    <!-- CGPA Calculator Section -->
+    <section class="calculator-section glass-card" id="calculatorSection">
+      <header class="app-header">
+        <div class="brand">
+          <span class="logo-mark">🎓 FUG</span>
+          <div>
+            <h1>CGPA Calculator</h1>
+            <p class="subtitle">Federal University Gashua · All Departments & Levels</p>
+          </div>
         </div>
-        <div class="input-group">
-          <label for="deptSelect">🏛️ Department</label>
-          <select id="deptSelect">
-            <option value="computer-science">Computer Science</option>
-            <option value="medicine">Medicine & Surgery</option>
-            <option value="law">Law</option>
-            <option value="economics">Economics</option>
-            <option value="mass-comm">Mass Communication</option>
-            <option value="biology">Biology</option>
-            <option value="chemistry">Chemistry</option>
-            <option value="physics">Physics</option>
-            <option value="mathematics">Mathematics</option>
-            <option value="accounting">Accounting</option>
-            <option value="business-admin">Business Administration</option>
-            <option value="sociology">Sociology</option>
-            <option value="political-science">Political Science</option>
-            <option value="engineering">Engineering (Mechanical)</option>
-            <option value="agric-econ">Agricultural Economics</option>
-          </select>
+      </header>
+
+      <div class="control-panel">
+        <div class="control-row">
+          <div class="input-group">
+            <label for="levelSelect">🎯 Current Level</label>
+            <select id="levelSelect">
+              <option value="100">100 Level</option>
+              <option value="200">200 Level</option>
+              <option value="300">300 Level</option>
+              <option value="400">400 Level</option>
+              <option value="500">500 Level (Medicine/Law)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="deptSelect">🏛️ Department</label>
+            <select id="deptSelect">
+              <option value="computer-science">Computer Science</option>
+              <option value="medicine">Medicine & Surgery</option>
+              <option value="law">Law</option>
+              <option value="economics">Economics</option>
+              <option value="mass-comm">Mass Communication</option>
+              <option value="biology">Biology</option>
+              <option value="chemistry">Chemistry</option>
+              <option value="physics">Physics</option>
+              <option value="mathematics">Mathematics</option>
+              <option value="accounting">Accounting</option>
+              <option value="business-admin">Business Administration</option>
+              <option value="sociology">Sociology</option>
+              <option value="political-science">Political Science</option>
+              <option value="engineering">Engineering (Mechanical)</option>
+              <option value="agric-econ">Agricultural Economics</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-row secondary">
+          <div class="input-group">
+            <label for="semesterSelect">📅 Semester</label>
+            <select id="semesterSelect">
+              <option value="first">First Semester</option>
+              <option value="second">Second Semester</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="gradingMode">📊 Grading Mode</label>
+            <select id="gradingMode">
+              <option value="5point">5.0 scale (FUG standard)</option>
+              <option value="4point">4.0 scale</option>
+            </select>
+          </div>
         </div>
       </div>
-      <div class="control-row secondary">
-        <div class="input-group">
-          <label for="semesterSelect">📅 Semester</label>
-          <select id="semesterSelect">
-            <option value="first">First Semester</option>
-            <option value="second">Second Semester</option>
-          </select>
+
+      <div class="course-entry">
+        <div class="section-title-row">
+          <h2>📚 Courses for <span id="dynamicLevelLabel">100 Level</span> · <span id="dynamicDeptLabel">Computer Science</span></h2>
+          <button class="btn-outline" id="addCourseBtn">+ Add Course</button>
         </div>
-        <div class="input-group">
-          <label for="gradingMode">📊 Grading Mode</label>
-          <select id="gradingMode">
-            <option value="5point">5.0 scale (FUG standard)</option>
-            <option value="4point">4.0 scale</option>
-          </select>
+        <div id="courseListContainer" class="course-list"></div>
+        <div class="course-actions">
+          <span class="course-count" id="courseCount">0 courses added</span>
+          <button class="btn-ghost" id="resetCoursesBtn">↺ Reset all courses</button>
+        </div>
+      </div>
+
+      <div class="result-panel">
+        <div class="result-left">
+          <div class="big-gpa-display">
+            <span class="gpa-label">Current GPA</span>
+            <span class="gpa-value" id="gpaValue">0.00</span>
+            <span class="gpa-scale" id="gpaScale">/ 5.0</span>
+          </div>
+          <div class="cgpa-preview">
+            <span class="preview-label">Projected CGPA</span>
+            <span class="preview-value" id="cgpaValue">—</span>
+          </div>
+        </div>
+        <div class="result-stats">
+          <div class="stat-item">
+            <span>Total Units</span>
+            <strong id="totalUnits">0</strong>
+          </div>
+          <div class="stat-item">
+            <span>Weighted Points</span>
+            <strong id="weightedPoints">0</strong>
+          </div>
+          <div class="stat-item">
+            <span>Credit Passed</span>
+            <strong id="creditPassed">0</strong>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- dynamic course entry area -->
-    <section class="course-entry glass-card">
-      <div class="section-title-row">
-        <h2>📚 Courses for <span id="dynamicLevelLabel">100 Level</span> · <span id="dynamicDeptLabel">Computer Science</span></h2>
-        <button class="btn-outline" id="addCourseBtn">+ Add Course</button>
-      </div>
-      <div id="courseListContainer" class="course-list">
-        <!-- course rows generated by JavaScript -->
-      </div>
-      <div class="course-actions">
-        <span class="course-count" id="courseCount">0 courses added</span>
-        <button class="btn-ghost" id="resetCoursesBtn">↺ Reset all courses</button>
-      </div>
-    </section>
-
-    <!-- result panel -->
-    <section class="result-panel glass-card">
-      <div class="result-left">
-        <div class="big-gpa-display">
-          <span class="gpa-label">Current GPA</span>
-          <span class="gpa-value" id="gpaValue">0.00</span>
-          <span class="gpa-scale" id="gpaScale">/ 5.0</span>
-        </div>
-        <div class="cgpa-preview">
-          <span class="preview-label">Projected CGPA</span>
-          <span class="preview-value" id="cgpaValue">—</span>
-        </div>
-      </div>
-      <div class="result-stats">
-        <div class="stat-item">
-          <span>Total Units</span>
-          <strong id="totalUnits">0</strong>
-        </div>
-        <div class="stat-item">
-          <span>Weighted Points</span>
-          <strong id="weightedPoints">0</strong>
-        </div>
-        <div class="stat-item">
-          <span>Credit Passed</span>
-          <strong id="creditPassed">0</strong>
-        </div>
-      </div>
-    </section>
-
-    <footer class="app-footer">
-      <p>⚡ Federal University Gashua · CGPA calculator for all departments and levels</p>
-      <p class="tiny-note">Built with HTML, CSS & vanilla JavaScript – no backend required</p>
-    </footer>
   </main>
+
+  <!-- About Page -->
+  <main id="about" class="page">
+    <section class="about-section glass-card">
+      <h1 class="page-title">About Federal University Gashua</h1>
+      <div class="about-content">
+        <div class="about-text">
+          <p class="about-description">
+            Federal University Gashua (FUG) is a premier institution of higher learning located in Yobe State, Nigeria. 
+            Established with a vision to provide quality education and foster academic excellence, FUG has become a 
+            beacon of knowledge in the northeastern region of Nigeria.
+          </p>
+          <p class="about-description">
+            Our university is committed to nurturing future leaders, innovators, and problem-solvers through 
+            rigorous academic programs, cutting-edge research, and a vibrant campus life. With state-of-the-art 
+            facilities and dedicated faculty members, we provide students with an environment that promotes 
+            intellectual growth and personal development.
+          </p>
+          <div class="about-stats">
+            <div class="stat-box">
+              <span class="stat-number">15+</span>
+              <span class="stat-label">Departments</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number">5000+</span>
+              <span class="stat-label">Students</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number">200+</span>
+              <span class="stat-label">Faculty Members</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&h=400&fit=crop" alt="University Building">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Gallery Page -->
+  <main id="gallery" class="page">
+    <section class="gallery-section glass-card">
+      <h1 class="page-title">Student Life Gallery</h1>
+      <p class="page-subtitle">Capturing moments of academic excellence and campus life at FUG</p>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=300&fit=crop" alt="Students studying">
+          <div class="gallery-overlay">
+            <span>Group Study Session</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop" alt="Students collaborating">
+          <div class="gallery-overlay">
+            <span>Collaborative Learning</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop" alt="Library study">
+          <div class="gallery-overlay">
+            <span>Library Research</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop" alt="Lecture hall">
+          <div class="gallery-overlay">
+            <span>Lecture Session</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&h=300&fit=crop" alt="Students on campus">
+          <div class="gallery-overlay">
+            <span>Campus Life</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&h=300&fit=crop" alt="Graduation">
+          <div class="gallery-overlay">
+            <span>Graduation Day</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=400&h=300&fit=crop" alt="Computer lab">
+          <div class="gallery-overlay">
+            <span>Computer Laboratory</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop" alt="Campus building">
+          <div class="gallery-overlay">
+            <span>University Campus</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Services Page -->
+  <main id="services" class="page">
+    <section class="services-section glass-card">
+      <h1 class="page-title">Our Services</h1>
+      <p class="page-subtitle">Comprehensive academic tools and resources for FUG students</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">📊</div>
+          <h3>CGPA Calculation</h3>
+          <p>Accurate calculation of your Cumulative Grade Point Average using the official FUG grading system.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📚</div>
+          <h3>Course Management</h3>
+          <p>Easily add, remove, and manage your courses for each semester with our intuitive interface.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🎯</div>
+          <h3>Grade Tracking</h3>
+          <p>Monitor your academic performance across different levels and departments in real-time.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📈</div>
+          <h3>Performance Analytics</h3>
+          <p>Get insights into your academic progress with detailed statistics and projections.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🏛️</div>
+          <h3>Department Support</h3>
+          <p>Access specialized calculators for all 15+ departments at Federal University Gashua.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">💡</div>
+          <h3>Academic Guidance</h3>
+          <p>Receive helpful tips and resources to improve your academic performance and reach your goals.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Contact Page -->
+  <main id="contact" class="page">
+    <section class="contact-section glass-card">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-subtitle">We're here to help with any questions or concerns</p>
+      <div class="contact-content">
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <div>
+              <h3>Phone</h3>
+              <p>+234 816 362 5542</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📧</span>
+            <div>
+              <h3>Email</h3>
+              <p>info@fug.edu.ng</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <div>
+              <h3>Address</h3>
+              <p>Federal University Gashua<br>Yobe State, Nigeria</p>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form">
+          <div class="input-field-3d">
+            <label>👤 Your Name</label>
+            <input type="text" id="contactName" placeholder="Enter your name">
+          </div>
+          <div class="input-field-3d">
+            <label>📧 Your Email</label>
+            <input type="email" id="contactEmail" placeholder="Enter your email">
+          </div>
+          <div class="input-field-3d">
+            <label>💬 Message</label>
+            <textarea id="contactMessage" rows="4" placeholder="Write your message here"></textarea>
+          </div>
+          <button class="cta-btn" id="sendMessageBtn">
+            <span>Send Message</span>
+            <span class="btn-shine"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>⚡ Federal University Gashua · CGPA calculator for all departments and levels</p>
+    <p class="tiny-note">© 2024 FUG CGPA Calculator. All rights reserved.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
